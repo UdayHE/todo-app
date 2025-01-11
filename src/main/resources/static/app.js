@@ -14,7 +14,7 @@ todoForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   const todoText = todoInput.value.trim();
   if (todoText) {
-    const newTodo = await createTodo({ text: todoText });
+    const newTodo = await createTodo({ title: todoText });
     addTodoToDOM(newTodo);
     todoInput.value = ""; // Clear input field
   }
@@ -75,7 +75,7 @@ function addTodoToDOM(todo) {
   todoItem.dataset.id = todo.id;
 
   todoItem.innerHTML = `
-    <span>${todo.text}</span>
+    <span>${todo.title}</span>
     <button class="edit">Edit</button>
     <button class="delete">Delete</button>
   `;
@@ -108,11 +108,11 @@ async function editTodo(todoItem) {
     editButton.textContent = "Save";
   } else {
     const input = todoItem.querySelector("input");
-    const updatedTodo = { text: input.value };
+    const updatedTodo = { title: input.value };
     const updatedData = await updateTodoInBackend(id, updatedTodo);
 
     const newSpan = document.createElement("span");
-    newSpan.textContent = updatedData.text;
+    newSpan.textContent = updatedData.title;
     todoItem.insertBefore(newSpan, input);
     todoItem.removeChild(input);
     editButton.textContent = "Edit";
