@@ -93,17 +93,19 @@ async function createTodo(todo) {
 
 // Update Todo
 async function updateTodoInBackend(id, updatedTodo) {
-    try {
-        const response = await fetch(`${API_URL}/${id}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(updatedTodo),
-        });
-        return await response.json();
-    } catch (error) {
-        console.error("Error updating todo:", error);
+    const response = await fetch(`/to-do/api/todos/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedTodo),
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to update todo");
     }
+
+    return response.json(); // Ensure this matches the backend response
 }
+
 
 // Delete Todo
 async function deleteTodoFromBackend(id) {
@@ -167,20 +169,45 @@ async function editTodo(todoItem) {
     if (editButton.textContent === "Edit") {
         const input = document.createElement("input");
         input.type = "text";
-        input.value = span.textContent;
+        input.value = span.textContent || ""; // Set default value
+        input.classList.add("todo-edit-input"); // Add a unique class
         todoItem.insertBefore(input, span);
         todoItem.removeChild(span);
         editButton.textContent = "Save";
-    } else {
-        const input = todoItem.querySelector("input");
-        const updatedTodo = { title: input.value };
-        const updatedData = await updateTodoInBackend(id, updatedTodo);
 
-        const newSpan = document.createElement("span");
-        newSpan.textContent = updatedData.title;
-        todoItem.insertBefore(newSpan, input);
-        todoItem.removeChild(input);
-        editButton.textContent = "Edit";
+        // Debugging: Log the created input
+        console.log("Created input value:", input.value);
+    } else {
+        // Select the correct input by class
+        const input = todoItem.querySelector(".todo-edit-input");
+
+        // Debugging: Log the input value and confirm selection
+        console.log("Selected input value before PUT:", input?.value);
+        console.log("Selected input element:", input);
+
+        if (!input || !input.value) {
+            console.error("Input element is missing or has no value!");
+            return;
+        }
+
+        const updatedTodo = { title: input.value };
+        try {
+            // Debugging: Log the object being sent to the backend
+            console.log("Sending updatedTodo to backend:", updatedTodo);
+
+            const updatedData = await updateTodoInBackend(id, updatedTodo);
+
+            // Debugging: Log response from backend
+            console.log("Response from backend:", updatedData);
+
+            const newSpan = document.createElement("span");
+            newSpan.textContent = updatedData.title;
+            todoItem.insertBefore(newSpan, input);
+            todoItem.removeChild(input);
+            editButton.textContent = "Edit";
+        } catch (error) {
+            console.error("Failed to update todo:", error);
+        }
     }
 }
 
