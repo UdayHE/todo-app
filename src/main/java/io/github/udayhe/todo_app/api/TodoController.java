@@ -16,22 +16,22 @@ public class TodoController {
     private final ToDoService toDoService;
 
     @GetMapping
-    public ResponseEntity<List<Todo>> getAllTodos() {
+    public ResponseEntity<List<Todo>> getAll() {
         return ResponseEntity.ok(toDoService.list());
     }
 
     @PostMapping
-    public ResponseEntity<Todo> createTodo(@RequestBody Todo todo) {
+    public ResponseEntity<Todo> create(@RequestBody Todo todo) {
         return ResponseEntity.ok(toDoService.save(todo));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Todo> updateTodo(@PathVariable String id, @RequestBody Todo todo) {
+    public ResponseEntity<Todo> update(@PathVariable String id, @RequestBody Todo todo) {
         return ResponseEntity.ok(toDoService.update(id, todo));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteTodo(@PathVariable String id) {
+    public ResponseEntity<String> delete(@PathVariable String id) {
         toDoService.delete(id);
         return ResponseEntity.ok("success");
     }
