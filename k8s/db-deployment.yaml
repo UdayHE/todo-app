@@ -21,6 +21,6 @@ spec:
             - name: POSTGRES_USER
               value: "postgres"
             - name: POSTGRES_PASSWORD
-              value: "yourpassword"
+              value: "12345678"
             - name: POSTGRES_DB
               value: "todos"
