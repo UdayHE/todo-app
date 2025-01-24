@@ -3,6 +3,7 @@ package io.github.udayhe.todo_app.service.impl;
 import io.github.udayhe.todo_app.entity.Todo;
 import io.github.udayhe.todo_app.repository.TodoRepository;
 import io.github.udayhe.todo_app.service.ToDoService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,8 @@ import java.util.List;
 import java.util.Set;
 
 import static io.github.udayhe.todo_app.constant.Constant.MAX_LIMIT_COMPLETED;
+import static io.github.udayhe.todo_app.enums.Status.*;
+import static java.lang.System.currentTimeMillis;
 import static org.hibernate.internal.util.collections.CollectionHelper.isNotEmpty;
 
 @Service
@@ -47,9 +50,10 @@ public class ToDoServiceImpl implements ToDoService {
                 throw new IllegalArgumentException("More than " + MAX_LIMIT_COMPLETED + " ToDos can not be completed");
             List<Todo> todos = repository.findAllById(ids);
             todos.forEach(todo -> {
-                if (!todo.isCompleted()) {
-                    todo.setCompleted(true);
-                    todo.setModifiedTime(System.currentTimeMillis());
+                if (NEW.name().equals(todo.getStatus()) || OVERDUE.name().equals(todo.getStatus())) {
+                    todo.setStatus(COMPLETED.name());
+                    todo.setCompletionTime(currentTimeMillis());
+                    todo.setModifiedTime(currentTimeMillis());
                 }
             });
             repository.saveAll(todos);
@@ -61,11 +65,21 @@ public class ToDoServiceImpl implements ToDoService {
     }
 
     @Override
+    @Transactional
+    public void updateOverdueTodos() {
+        Long currentTime = System.currentTimeMillis();
+        List<Todo> overdueTodos = repository.findOverdueTodos(currentTime);
+        for (Todo todo : overdueTodos)
+            todo.setStatus(OVERDUE.name());
+        repository.saveAll(overdueTodos);
+    }
+
+    @Override
     public Todo update(String id, Todo todo) {
         try {
             Todo existing = findById(id);
             existing.setTitle(todo.getTitle());
-            existing.setCompleted(todo.isCompleted());
+            existing.setStatus(todo.getStatus());
             return save(existing);
         } catch (Exception e) {
             log.error("Exception in update.", e);

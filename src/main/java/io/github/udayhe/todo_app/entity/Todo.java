@@ -17,7 +17,13 @@ public class Todo extends BaseEntity {
     @Id
     private String id;
     private String title;
-    private boolean completed;
+    /**
+     * {@link io.github.udayhe.todo_app.enums.Status}
+     * */
+    private String status;
+    private Long dueTime;
+    private Long completionTime;
+    private Long cancelledTime;
 
 
     @PrePersist

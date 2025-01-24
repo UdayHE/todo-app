@@ -10,6 +10,6 @@ public abstract class BaseEntity {
     private boolean deleted;
     private String createdBy;
     private String modifiedBy;
-    private long createdTime;
-    private long modifiedTime;
+    private Long createdTime;
+    private Long modifiedTime;
 }

@@ -20,4 +20,6 @@ public interface ToDoService {
     void deleteAll();
 
     Boolean markAsCompleted(Set<String> ids);
+
+    void updateOverdueTodos();
 }
