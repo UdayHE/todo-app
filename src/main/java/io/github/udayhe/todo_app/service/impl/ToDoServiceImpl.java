@@ -11,9 +11,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Set;
 
-import static io.github.udayhe.todo_app.constant.Constant.MAX_LIMIT_COMPLETED;
+import static io.github.udayhe.todo_app.constant.Constant.MAX_LIMIT;
 import static io.github.udayhe.todo_app.enums.Status.*;
 import static java.lang.System.currentTimeMillis;
+import static java.util.Objects.nonNull;
 import static org.hibernate.internal.util.collections.CollectionHelper.isNotEmpty;
 
 @Service
@@ -46,8 +47,8 @@ public class ToDoServiceImpl implements ToDoService {
     @Override
     public Boolean markAsCompleted(Set<String> ids) {
         try {
-            if (isNotEmpty(ids) && ids.size() > MAX_LIMIT_COMPLETED)
-                throw new IllegalArgumentException("More than " + MAX_LIMIT_COMPLETED + " ToDos can not be completed");
+            if (isNotEmpty(ids) && ids.size() > MAX_LIMIT)
+                throw new IllegalArgumentException("More than " + MAX_LIMIT + " ToDos can not be completed");
             List<Todo> todos = repository.findAllById(ids);
             todos.forEach(todo -> {
                 if (NEW.name().equals(todo.getStatus()) || OVERDUE.name().equals(todo.getStatus())) {
@@ -65,9 +66,30 @@ public class ToDoServiceImpl implements ToDoService {
     }
 
     @Override
+    public Boolean markAsCancelled(Set<String> ids) {
+        try {
+            if (isNotEmpty(ids) && ids.size() > MAX_LIMIT)
+                throw new IllegalArgumentException("More than " + MAX_LIMIT + " ToDos can not be cancelled");
+            List<Todo> todos = repository.findAllById(ids);
+            todos.forEach(todo -> {
+                if (NEW.name().equals(todo.getStatus()) || OVERDUE.name().equals(todo.getStatus())) {
+                    todo.setStatus(CANCELLED.name());
+                    todo.setCancelledTime(currentTimeMillis());
+                    todo.setModifiedTime(currentTimeMillis());
+                }
+            });
+            repository.saveAll(todos);
+            return true;
+        } catch (Exception e) {
+            log.error("Error marking todos as completed", e);
+            return false;
+        }
+    }
+
+    @Override
     @Transactional
     public void updateOverdueTodos() {
-        Long currentTime = System.currentTimeMillis();
+        Long currentTime = currentTimeMillis();
         List<Todo> overdueTodos = repository.findOverdueTodos(currentTime);
         for (Todo todo : overdueTodos)
             todo.setStatus(OVERDUE.name());
@@ -79,7 +101,8 @@ public class ToDoServiceImpl implements ToDoService {
         try {
             Todo existing = findById(id);
             existing.setTitle(todo.getTitle());
-            existing.setStatus(todo.getStatus());
+            if(nonNull(todo.getDueTime()) && todo.getDueTime() > currentTimeMillis())
+                existing.setDueTime(todo.getDueTime());
             return save(existing);
         } catch (Exception e) {
             log.error("Exception in update.", e);

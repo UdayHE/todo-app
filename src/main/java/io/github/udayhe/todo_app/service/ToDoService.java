@@ -21,5 +21,7 @@ public interface ToDoService {
 
     Boolean markAsCompleted(Set<String> ids);
 
+    Boolean markAsCancelled(Set<String> ids);
+
     void updateOverdueTodos();
 }
