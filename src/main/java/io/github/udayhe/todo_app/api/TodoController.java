@@ -31,6 +31,11 @@ public class TodoController {
         return ResponseEntity.ok(toDoService.markAsCompleted(ids));
     }
 
+    @PostMapping("/cancelled")
+    public ResponseEntity<Boolean> markAsCancelled(@RequestBody Set<String> ids) {
+        return ResponseEntity.ok(toDoService.markAsCancelled(ids));
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Todo> update(@PathVariable String id, @RequestBody Todo todo) {
         return ResponseEntity.ok(toDoService.update(id, todo));
