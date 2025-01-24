@@ -3,45 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API Scout</title>
+    <title>To-Do App</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
 <div class="app-container">
     <header>
-        <h1>🚀 API Scout</h1>
+        <h1>TO-DO</h1>
     </header>
     <main>
-        <section id="request-section">
-            <form id="request-form">
-                <label for="method">HTTP Method:</label>
-                <select id="method" name="method" class="input-field">
-                    <option value="GET">GET</option>
-                    <option value="POST">POST</option>
-                    <option value="PUT">PUT</option>
-                    <option value="DELETE">DELETE</option>
-                </select>
+        <form id="todo-form">
+            <input type="text" id="todo-input" placeholder="Add a task..." required>
+            <button type="submit">+</button>
+        </form>
 
-                <label for="url">Request URL:</label>
-                <input type="url" id="url" name="url" placeholder="Enter endpoint URL" class="input-field" required>
-
-                <label for="headers">Headers (JSON):</label>
-                <textarea id="headers" class="input-field" placeholder='{"Content-Type": "application/json"}'></textarea>
-
-                <label for="body">Body (JSON, for POST/PUT):</label>
-                <textarea id="body" class="input-field" placeholder='{"key": "value"}'></textarea>
-
-                <button type="submit" class="submit-button">🚀 Send Request</button>
-            </form>
+        <section class="todo-list">
+            <h2>Your Tasks</h2>
+            <ul id="todo-list"></ul>
         </section>
 
-        <section id="response-section">
-            <div id="response-status" class="response-box"></div>
-            <div id="response-time" class="response-box"></div>
-            <pre id="response-body" class="response-box"></pre>
+        <section class="todo-actions">
+            <button id="mark-completed">Mark Selected as Completed</button>
         </section>
     </main>
 </div>
-<script src="script.js"></script>
+
+<script src="app.js"></script>
 </body>
 </html>
