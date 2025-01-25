@@ -2,7 +2,7 @@ package io.github.udayhe.todo_app.service.impl;
 
 import io.github.udayhe.todo_app.entity.Todo;
 import io.github.udayhe.todo_app.repository.TodoRepository;
-import io.github.udayhe.todo_app.service.StatusService;
+import io.github.udayhe.todo_app.service.IStatusService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public abstract class BaseStatusService implements StatusService {
+public abstract class BaseStatusService implements IStatusService {
 
     protected final TodoRepository todoRepository;
 

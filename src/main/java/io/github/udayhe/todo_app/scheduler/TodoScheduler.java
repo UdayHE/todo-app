@@ -1,6 +1,6 @@
 package io.github.udayhe.todo_app.scheduler;
 
-import io.github.udayhe.todo_app.service.ToDoService;
+import io.github.udayhe.todo_app.service.IToDoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -15,7 +15,7 @@ import static java.util.Collections.emptySet;
 @Slf4j
 public class TodoScheduler {
 
-    private final ToDoService todoService;
+    private final IToDoService todoService;
 
 
     @Scheduled(fixedRate = SCHEDULER_INTERVAL)

@@ -2,7 +2,7 @@ package io.github.udayhe.todo_app.service;
 
 import java.util.Set;
 
-public interface StatusService {
+public interface IStatusService {
 
     String getStatus();
 

@@ -1,7 +1,7 @@
 package io.github.udayhe.todo_app.api;
 
 import io.github.udayhe.todo_app.entity.Todo;
-import io.github.udayhe.todo_app.service.ToDoService;
+import io.github.udayhe.todo_app.service.IToDoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +14,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class TodoController {
 
-    private final ToDoService toDoService;
+    private final IToDoService toDoService;
 
     @GetMapping
     public ResponseEntity<List<Todo>> getAll() {

@@ -5,7 +5,7 @@ import io.github.udayhe.todo_app.entity.Todo;
 import java.util.List;
 import java.util.Set;
 
-public interface ToDoService {
+public interface IToDoService {
 
     List<Todo> list();
 

@@ -2,7 +2,7 @@ package io.github.udayhe.todo_app.service.impl;
 
 import io.github.udayhe.todo_app.entity.Todo;
 import io.github.udayhe.todo_app.repository.TodoRepository;
-import io.github.udayhe.todo_app.service.ToDoService;
+import io.github.udayhe.todo_app.service.IToDoService;
 import io.github.udayhe.todo_app.service.factory.StatusFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +18,7 @@ import static java.util.Objects.nonNull;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class ToDoServiceImpl implements ToDoService {
+public class ToDoService implements IToDoService {
 
     private final TodoRepository repository;
     private final StatusFactory statusFactory;
