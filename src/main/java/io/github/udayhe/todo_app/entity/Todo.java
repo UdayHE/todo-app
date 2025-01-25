@@ -28,9 +28,8 @@ public class Todo extends BaseEntity {
 
     @PrePersist
     private void generateIdIfNotSet() {
-        if (isNullOrEmpty(this.id)) {
+        if (isNullOrEmpty(this.id))
             this.id = UUID.randomUUID().toString();
-        }
     }
 }
 

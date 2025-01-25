@@ -26,14 +26,9 @@ public class TodoController {
         return ResponseEntity.ok(toDoService.save(todo));
     }
 
-    @PostMapping("/completed")
-    public ResponseEntity<Boolean> markAsCompleted(@RequestBody Set<String> ids) {
-        return ResponseEntity.ok(toDoService.markAsCompleted(ids));
-    }
-
-    @PostMapping("/cancelled")
-    public ResponseEntity<Boolean> markAsCancelled(@RequestBody Set<String> ids) {
-        return ResponseEntity.ok(toDoService.markAsCancelled(ids));
+    @PutMapping("/status/{status}")
+    public ResponseEntity<Boolean> statusUpdate(@PathVariable String status, @RequestBody  Set<String> ids) {
+        return ResponseEntity.ok(toDoService.updateStatus(status, ids));
     }
 
     @PutMapping("/{id}")

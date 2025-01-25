@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 
+import static java.util.Objects.isNull;
+
 @Aspect
 @Component
 public class BaseEntityAspect {
@@ -14,7 +16,7 @@ public class BaseEntityAspect {
     @Before("execution(* org.springframework.data.repository.CrudRepository.save(..)) && args(entity)")
     public void beforeSave(Object entity) {
         if (entity instanceof BaseEntity baseEntity) {
-            if (baseEntity.getCreatedTime() == 0) {
+            if (isNull(baseEntity.getCreatedTime()) || baseEntity.getCreatedTime() == 0) {
                 baseEntity.setCreatedTime(Instant.now().toEpochMilli());
                 baseEntity.setCreatedBy(getCurrentUsername());
             }

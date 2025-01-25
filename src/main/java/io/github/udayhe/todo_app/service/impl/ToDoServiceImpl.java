@@ -3,6 +3,7 @@ package io.github.udayhe.todo_app.service.impl;
 import io.github.udayhe.todo_app.entity.Todo;
 import io.github.udayhe.todo_app.repository.TodoRepository;
 import io.github.udayhe.todo_app.service.ToDoService;
+import io.github.udayhe.todo_app.service.factory.StatusFactory;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,11 +12,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Set;
 
-import static io.github.udayhe.todo_app.constant.Constant.MAX_LIMIT;
-import static io.github.udayhe.todo_app.enums.Status.*;
+import static io.github.udayhe.todo_app.enums.Status.OVERDUE;
 import static java.lang.System.currentTimeMillis;
+import static java.util.Collections.emptyList;
 import static java.util.Objects.nonNull;
-import static org.hibernate.internal.util.collections.CollectionHelper.isNotEmpty;
 
 @Service
 @Slf4j
@@ -23,6 +23,7 @@ import static org.hibernate.internal.util.collections.CollectionHelper.isNotEmpt
 public class ToDoServiceImpl implements ToDoService {
 
     private final TodoRepository repository;
+    private final StatusFactory statusFactory;
 
     @Override
     public List<Todo> list() {
@@ -31,7 +32,7 @@ public class ToDoServiceImpl implements ToDoService {
         } catch (Exception e) {
             log.error("Exception in list.", e);
         }
-        return null;
+        return emptyList();
     }
 
     @Override
@@ -45,55 +46,8 @@ public class ToDoServiceImpl implements ToDoService {
     }
 
     @Override
-    public Boolean markAsCompleted(Set<String> ids) {
-        try {
-            if (isNotEmpty(ids) && ids.size() > MAX_LIMIT)
-                throw new IllegalArgumentException("More than " + MAX_LIMIT + " ToDos can not be completed");
-            List<Todo> todos = repository.findAllById(ids);
-            todos.forEach(todo -> {
-                if (NEW.name().equals(todo.getStatus()) || OVERDUE.name().equals(todo.getStatus())) {
-                    todo.setStatus(COMPLETED.name());
-                    todo.setCompletionTime(currentTimeMillis());
-                    todo.setModifiedTime(currentTimeMillis());
-                }
-            });
-            repository.saveAll(todos);
-            return true;
-        } catch (Exception e) {
-            log.error("Error marking todos as completed", e);
-            return false;
-        }
-    }
-
-    @Override
-    public Boolean markAsCancelled(Set<String> ids) {
-        try {
-            if (isNotEmpty(ids) && ids.size() > MAX_LIMIT)
-                throw new IllegalArgumentException("More than " + MAX_LIMIT + " ToDos can not be cancelled");
-            List<Todo> todos = repository.findAllById(ids);
-            todos.forEach(todo -> {
-                if (NEW.name().equals(todo.getStatus()) || OVERDUE.name().equals(todo.getStatus())) {
-                    todo.setStatus(CANCELLED.name());
-                    todo.setCancelledTime(currentTimeMillis());
-                    todo.setModifiedTime(currentTimeMillis());
-                }
-            });
-            repository.saveAll(todos);
-            return true;
-        } catch (Exception e) {
-            log.error("Error marking todos as completed", e);
-            return false;
-        }
-    }
-
-    @Override
-    @Transactional
-    public void updateOverdueTodos() {
-        Long currentTime = currentTimeMillis();
-        List<Todo> overdueTodos = repository.findOverdueTodos(currentTime);
-        for (Todo todo : overdueTodos)
-            todo.setStatus(OVERDUE.name());
-        repository.saveAll(overdueTodos);
+    public Boolean updateStatus(String status, Set<String> ids) {
+        return statusFactory.get(status).update(ids);
     }
 
     @Override

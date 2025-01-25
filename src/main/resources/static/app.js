@@ -53,8 +53,8 @@ markCompletedButton.addEventListener("click", async () => {
 // Function: Mark Todos as Completed
 async function markAsCompleted(ids) {
     try {
-        const response = await fetch(`${API_URL}/completed`, {
-            method: "POST",
+        const response = await fetch(`${API_URL}/status/COMPLETED`, {
+            method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(ids),
         });

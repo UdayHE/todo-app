@@ -5,16 +5,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import static io.github.udayhe.todo_app.constant.Constant.SCHEDULED_TIME;
+import static io.github.udayhe.todo_app.enums.Status.OVERDUE;
+import static java.util.Collections.emptySet;
 
 @Component
 @RequiredArgsConstructor
 public class TodoScheduler {
 
-    private ToDoService todoService;
+    private final ToDoService todoService;
 
-    @Scheduled(fixedRate = SCHEDULED_TIME)
+    @Scheduled(fixedRate = 60000L)
     public void checkForOverdueTodos() {
-        todoService.updateOverdueTodos();
+        todoService.updateStatus(OVERDUE.name(), emptySet());
     }
 }

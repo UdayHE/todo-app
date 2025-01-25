@@ -19,9 +19,5 @@ public interface ToDoService {
 
     void deleteAll();
 
-    Boolean markAsCompleted(Set<String> ids);
-
-    Boolean markAsCancelled(Set<String> ids);
-
-    void updateOverdueTodos();
+    Boolean updateStatus(String status, Set<String> ids);
 }
