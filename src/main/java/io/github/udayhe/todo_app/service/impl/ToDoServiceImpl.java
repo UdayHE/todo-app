@@ -4,7 +4,6 @@ import io.github.udayhe.todo_app.entity.Todo;
 import io.github.udayhe.todo_app.repository.TodoRepository;
 import io.github.udayhe.todo_app.service.ToDoService;
 import io.github.udayhe.todo_app.service.factory.StatusFactory;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Set;
 
-import static io.github.udayhe.todo_app.enums.Status.OVERDUE;
 import static java.lang.System.currentTimeMillis;
 import static java.util.Collections.emptyList;
 import static java.util.Objects.nonNull;

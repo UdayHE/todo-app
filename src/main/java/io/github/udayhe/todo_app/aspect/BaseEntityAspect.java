@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 
+import static io.github.udayhe.todo_app.constant.Constant.SYSTEM;
 import static java.util.Objects.isNull;
 
 @Aspect
@@ -18,10 +19,10 @@ public class BaseEntityAspect {
         if (entity instanceof BaseEntity baseEntity) {
             if (isNull(baseEntity.getCreatedTime()) || baseEntity.getCreatedTime() == 0) {
                 baseEntity.setCreatedTime(Instant.now().toEpochMilli());
-                baseEntity.setCreatedBy(getCurrentUsername());
+                baseEntity.setCreatedBy(getCurrentUserId());
             }
             baseEntity.setModifiedTime(Instant.now().toEpochMilli());
-            baseEntity.setModifiedBy(getCurrentUsername());
+            baseEntity.setModifiedBy(getCurrentUserId());
         }
     }
 
@@ -29,17 +30,17 @@ public class BaseEntityAspect {
     public void beforeSaveAll(Iterable<?> entities) {
         for (Object entity : entities) {
             if (entity instanceof BaseEntity baseEntity) {
-                if (baseEntity.getCreatedTime() == 0) {
+                if (isNull(baseEntity.getCreatedTime()) || baseEntity.getCreatedTime() == 0) {
                     baseEntity.setCreatedTime(Instant.now().toEpochMilli());
-                    baseEntity.setCreatedBy(getCurrentUsername());
+                    baseEntity.setCreatedBy(getCurrentUserId());
                 }
                 baseEntity.setModifiedTime(Instant.now().toEpochMilli());
-                baseEntity.setModifiedBy(getCurrentUsername());
+                baseEntity.setModifiedBy(getCurrentUserId());
             }
         }
     }
 
-    private String getCurrentUsername() {
-       return "007";
+    private String getCurrentUserId() {
+       return SYSTEM;
     }
 }

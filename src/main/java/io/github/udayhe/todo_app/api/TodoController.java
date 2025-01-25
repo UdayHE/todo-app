@@ -27,12 +27,14 @@ public class TodoController {
     }
 
     @PutMapping("/status/{status}")
-    public ResponseEntity<Boolean> statusUpdate(@PathVariable String status, @RequestBody  Set<String> ids) {
+    public ResponseEntity<Boolean> statusUpdate(@PathVariable String status,
+                                                @RequestBody  Set<String> ids) {
         return ResponseEntity.ok(toDoService.updateStatus(status, ids));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Todo> update(@PathVariable String id, @RequestBody Todo todo) {
+    public ResponseEntity<Todo> update(@PathVariable String id,
+                                       @RequestBody Todo todo) {
         return ResponseEntity.ok(toDoService.update(id, todo));
     }
 
