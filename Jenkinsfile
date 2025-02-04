@@ -15,7 +15,7 @@ pipeline {
 
         stage('Build & Test with Gradle') {
             steps {
-                sh './gradlew clean build'
+                sh './gradlew clean assemble'
             }
         }
 
