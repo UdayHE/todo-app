@@ -1,3 +1,11 @@
 FROM openjdk:21-jdk-slim
-COPY target/todo-app.jar app.jar
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+
+RUN mkdir -p /etc/todo-app
+
+WORKDIR /etc/todo-app
+
+ADD build/libs/*.jar ./
+
+CMD java $JAVA_OPTS -jar *.jar
+
+EXPOSE 8080
