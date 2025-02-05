@@ -65,11 +65,14 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    sh '''
-                    echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-                    docker push $CONTAINER_REGISTRY/$IMAGE_NAME:latest
-                    docker logout
-                    '''
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh '''
+                        echo "Logging into Docker Hub..."
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker push $CONTAINER_REGISTRY/$IMAGE_NAME:latest
+                        docker logout
+                        '''
+                    }
                 }
             }
         }
