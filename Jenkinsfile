@@ -64,8 +64,12 @@ pipeline {
 
         stage('Push Docker Image') {
             steps {
-                withDockerRegistry([credentialsId: 'docker-hub-credentials', url: 'https://index.docker.io/v1/']) {
-                    sh 'docker push $CONTAINER_REGISTRY/$IMAGE_NAME:latest'
+                script {
+                    sh '''
+                    echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+                    docker push $CONTAINER_REGISTRY/$IMAGE_NAME:latest
+                    docker logout
+                    '''
                 }
             }
         }
@@ -91,7 +95,7 @@ pipeline {
             steps {
                 script {
                     sleep(10)  // Wait for app to start
-                    def status = sh(script: "curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/actuator/health", returnStdout: true).trim()
+                    def status = sh(script: "curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/to-do/actuator/health", returnStdout: true).trim()
                     if (status != '200') {
                         error("Deployment failed. Service is not healthy.")
                     }
