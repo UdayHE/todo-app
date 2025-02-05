@@ -52,7 +52,7 @@ pipeline {
 
         stage('Build & Test with Gradle') {
             steps {
-                sh './gradlew clean build --no-daemon --console=plain'
+                sh './gradlew clean assemble'
             }
         }
 
