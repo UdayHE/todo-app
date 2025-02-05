@@ -64,17 +64,12 @@ pipeline {
 
         stage('Push Docker Image') {
             steps {
-                withCredentials([
-                    string(credentialsId: 'DOCKER_USERNAME', variable: 'uhegde'),
-                    string(credentialsId: 'DOCKER_PASSWORD', variable: 'Dock@1234')
-                ]) {
-                    script {
-                        sh '''
-                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                        docker push $CONTAINER_REGISTRY/$IMAGE_NAME:latest
-                        docker logout
-                        '''
-                    }
+                script {
+                    sh '''
+                    echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+                    docker push $CONTAINER_REGISTRY/$IMAGE_NAME:latest
+                    docker logout
+                    '''
                 }
             }
         }
