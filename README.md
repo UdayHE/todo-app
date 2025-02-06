@@ -1,3 +1,3 @@
 # todo-app
 
-Simple Spring-Boot app with docker & kubernetes
+Simple To-Do app with docker & kubernetes (CI/CD)
