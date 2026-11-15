@@ -15,9 +15,18 @@ todoForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const todoText = todoInput.value.trim();
     if (todoText) {
-        const newTodo = await createTodo({ title: todoText });
-        addTodoToDOM(newTodo);
-        todoInput.value = ""; // Clear input field
+        try {
+            const newTodo = await createTodo({ title: todoText });
+            if (newTodo) {
+                addTodoToDOM(newTodo);
+                todoInput.value = ""; // Clear input field
+            } else {
+                alert("Could not add task. Please try again.");
+            }
+        } catch (error) {
+            console.error("Error in Add ToDo:", error);
+            alert("Could not add task. Please try again.");
+        }
     }
 });
 
@@ -85,9 +94,19 @@ async function createTodo(todo) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(todo),
         });
-        return await response.json();
+        if (!response.ok) {
+            console.error("Error creating todo: status", response.status);
+            return null;
+        }
+        const created = await response.json();
+        if (!created || created.id == null) {
+            console.error("Error creating todo: response has no id", created);
+            return null;
+        }
+        return created;
     } catch (error) {
         console.error("Error creating todo:", error);
+        return null;
     }
 }
 
